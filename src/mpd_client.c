@@ -1,7 +1,7 @@
 /* ympd
    (c) 2013-2014 Andrew Karpow <andy@ndyk.de>
    This project's homepage is: http://www.ympd.org
-   
+
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; version 2 of the License.
@@ -318,7 +318,7 @@ out_set_pass:
 
     if(mpd.conn_state == MPD_CONNECTED && mpd_connection_get_error(mpd.conn) != MPD_ERROR_SUCCESS)
     {
-        n = snprintf(mpd.buf, MAX_SIZE, "{\"type\":\"error\", \"data\": \"%s\"}", 
+        n = snprintf(mpd.buf, MAX_SIZE, "{\"type\":\"error\", \"data\": \"%s\"}",
             mpd_connection_get_error_message(mpd.conn));
 
         /* Try to recover error */
@@ -349,7 +349,7 @@ static int mpd_notify_callback(struct mg_connection *c, enum mg_event ev) {
     if(c->callback_param)
     {
         /* error message? */
-        n = snprintf(mpd.buf, MAX_SIZE, "{\"type\":\"error\",\"data\":\"%s\"}", 
+        n = snprintf(mpd.buf, MAX_SIZE, "{\"type\":\"error\",\"data\":\"%s\"}",
             (const char *)c->callback_param);
 
         mg_websocket_write(c, 1, mpd.buf, n);
@@ -475,6 +475,18 @@ char* mpd_get_title(struct mpd_song const *song)
     return str;
 }
 
+char* mpd_get_name(struct mpd_song const *song)
+{
+    char *str;
+
+    str = (char *)mpd_song_get_tag(song, MPD_TAG_NAME, 0);
+    if (str == NULL) {
+	return "";
+    } else {
+	return str;
+    }
+}
+
 char* mpd_get_artist(struct mpd_song const *song)
 {
     char *str;
@@ -517,9 +529,9 @@ int mpd_put_state(char *buffer, int *current_song_id, unsigned *queue_version)
         " \"single\":%d, \"crossfade\":%d, \"consume\":%d, \"random\":%d, "
         " \"songpos\": %d, \"elapsedTime\": %d, \"totalTime\":%d, "
         " \"currentsongid\": %d"
-        "}}", 
+        "}}",
         mpd_status_get_state(status),
-        mpd_status_get_volume(status), 
+        mpd_status_get_volume(status),
         mpd_status_get_repeat(status),
         mpd_status_get_single(status),
         mpd_status_get_crossfade(status),
@@ -587,6 +599,8 @@ int mpd_put_current_song(char *buffer)
     cur += json_emit_quoted_str(cur, end - cur, mpd_get_artist(song));
     cur += json_emit_raw_str(cur, end - cur, ",\"album\":");
     cur += json_emit_quoted_str(cur, end - cur, mpd_get_album(song));
+    cur += json_emit_raw_str(cur, end - cur, ",\"name\":");
+    cur += json_emit_quoted_str(cur, end - cur, mpd_get_name(song));
 
     cur += json_emit_raw_str(cur, end - cur, "}}");
     mpd_song_free(song);
@@ -624,6 +638,8 @@ int mpd_put_queue(char *buffer, unsigned int offset)
             cur += json_emit_quoted_str(cur, end - cur, mpd_get_artist(song));
             cur += json_emit_raw_str(cur, end - cur, ",\"album\":");
             cur += json_emit_quoted_str(cur, end - cur, mpd_get_album(song));
+            cur += json_emit_raw_str(cur, end - cur, ",\"name\":");
+            cur += json_emit_quoted_str(cur, end - cur, mpd_get_name(song));
             cur += json_emit_raw_str(cur, end - cur, "},");
         }
         mpd_entity_free(entity);
@@ -742,6 +758,8 @@ int mpd_search(char *buffer, char *searchstr)
             cur += json_emit_quoted_str(cur, end - cur, mpd_get_artist(song));
             cur += json_emit_raw_str(cur, end - cur, ",\"album\":");
             cur += json_emit_quoted_str(cur, end - cur, mpd_get_album(song));
+            cur += json_emit_raw_str(cur, end - cur, ",\"name\":");
+            cur += json_emit_quoted_str(cur, end - cur, mpd_get_name(song));
             cur += json_emit_raw_str(cur, end - cur, "},");
             mpd_song_free(song);
 
