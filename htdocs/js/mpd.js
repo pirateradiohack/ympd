@@ -180,6 +180,13 @@ $(document).ready(function(){
         addStream();
     });
 
+    $('#addradio').on('shown.bs.modal', function () {
+        $('#radioname').focus();
+     })
+    $('#addradio form').on('submit', function (e) {
+        addRadio();
+    });
+
     if(!notificationsSupported())
         $('#btnnotify').addClass("disabled");
     else
@@ -823,6 +830,14 @@ function addStream() {
     }
     $('#streamurl').val("");
     $('#addstream').modal('hide');
+}
+
+function addRadio() {
+    if($('#radioname').val().length > 0) {
+        $.get(window.location.origin+":5000/add_radio?name="+$('#radioname').val());
+    }
+    $('#radioname').val("");
+    $('#addradio').modal('hide');
 }
 
 function saveQueue() {
