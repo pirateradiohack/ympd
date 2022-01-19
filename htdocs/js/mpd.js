@@ -44,7 +44,7 @@ var app = $.sammy(function() {
         $('#dirble_panel').addClass('hide');
         socket.send('MPD_API_GET_QUEUE,'+pagination);
 
-        $('#panel-heading').text("Queue");
+        $('#panel-heading').text("Playlist");
         $('#queue').addClass('active');
     }
 
