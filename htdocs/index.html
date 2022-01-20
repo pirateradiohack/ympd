@@ -36,13 +36,11 @@
         <ul id="nav_links" class="nav navbar-nav">
           <li id="queue" style="border-left:2px solid;"><a href="#/">Radios</a></li>
           <li id="browse" style="border-right:2px solid;"><a href="#/browse/0/">Podcasts</a></li>
-          <li><a href="#">Add:</a></li>
-          <li><a href="#" data-toggle="modal" data-target="#addstream">Stream</a></li>
-          <li><a href="#" data-toggle="modal" data-target="#addradio">Radio</a></li>
+          <li><a class="glyphicon glyphicon-plus" href="#" data-toggle="modal" data-target="#addradio">Radio</a></li>
           <script language="JavaScript">
-            document.write('<a href="' + window.location.protocol + '//' + window.location.hostname + ':8000' + window.location.pathname + '" >Podcast</a> ' );
-					</script>
-          <li style="border-left:2px solid;"><a href="#" data-toggle="modal" data-target="#settings" onclick="getHost();">Settings</a></li>
+            document.write('<li><a class="glyphicon glyphicon-plus" href="' + window.location.protocol + '//' + window.location.hostname + ':8000' + window.location.pathname + '" >Podcast</a></li> ' );
+          </script>
+          <li><a class="glyphicon glyphicon-plus" href="#" data-toggle="modal" data-target="#addstream">Stream</a></li>
         </ul>
 
         <div class="btn-toolbar navbar-btn navbar-right" role="toolbar">
@@ -163,9 +161,6 @@
             <button type="button" class="btn btn-default" onclick="socket.send('MPD_API_RM_ALL');">
               <span class="glyphicon glyphicon-trash"></span> Clear Playlist
             </button>
-            <a href="#" data-toggle="modal" data-target="#savequeue" class="btn btn-default">
-              <span class="glyphicon glyphicon-save"></span> Save Playlist
-            </a>
           </div>
 
         </div>
