@@ -21,6 +21,7 @@ find_package(Threads REQUIRED)
 
 configure_file(src/config.h.in ${PROJECT_BINARY_DIR}/config.h)
 include_directories(${PROJECT_BINARY_DIR} ${PROJECT_SOURCE_DIR}	${LIBMPDCLIENT_INCLUDE_DIR})
+include_directories(/usr/lib/arm-linux-gnueabihf)
 
 include(CheckCSourceCompiles)
 
